@@ -1,10 +1,8 @@
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.Random;
 
 public class StreamPrep {
     public static void main(String[] args) {
@@ -90,6 +88,120 @@ public class StreamPrep {
         System.out.println(i);
 
 
+        //Terminal ops
+        List<Integer> ll = Arrays.asList(1, 2, 3, 4);
+
+        //collect
+        List<Integer> collect2 = ll.stream().skip(1).collect(Collectors.toList());
+        System.out.println(collect2);
+
+        //forEach
+        ll.forEach(System.out::println);
+
+        //reduce - combine lements to produce a single result
+
+        Optional<Integer> reduce = ll.stream().reduce((x, y) -> x + y);
+        System.out.println(reduce.get());
+
+        //anyMatch,allMatch,noMatch
+
+        //findFirst,findAny
+
+        //Squaring and sorting numbers
+        List<Integer> list2 = Arrays.asList(5, -2, 3, -4, 6);
+        List<Integer> sqauredList = list2.stream().map(x -> x * x).sorted().toList();
+        System.out.println(sqauredList);
+
+        //summing values
+        sqauredList.stream().reduce(Integer::sum).ifPresent(System.out::println);
+
+        //counting occurence of character
+        String sentence = "Hello World";
+        long count1 = sentence.chars().filter(x -> x == 'l').count();
+        System.out.println(count1);
+
+        long startTime = System.currentTimeMillis();
+        List<Integer> list3 = Stream.iterate(1, x -> x + 1).limit(20000).toList();
+        list3.stream().map(x-> f(x)).toList();
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime + " ms");
+
+        startTime = System.currentTimeMillis();
+        List<Integer> list4 = Stream.iterate(1, x -> x + 1).limit(20000).toList();
+        list4.parallelStream().map(x-> f(x)).toList();
+        endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime + " ms");
+
+        //Parallel streams are most effective for CPU intensive or large datasets where tasks r independent
+        //They may add overhead for simple tasks or small datasets
+
+        //cumulative sum
+        //[1,2,3,4,5] -> [1,3,6,10,15]
+
+        Arrays.asList(1,2,3,4,5,6);
+
+        int m=10,n=2;
+        Optional<Integer> reduce1 = Stream.iterate(1, x -> x + 1).limit(m).filter(x -> x % n == 0).reduce(Integer::sum);
+        System.out.println(reduce1.get());
+
+        List<Integer> list5 = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        AtomicInteger sum=new AtomicInteger(0);
+        List<Integer> list6 = list5.stream().map(x -> sum.addAndGet(x)).toList();
+        System.out.println(list6);
+
+        System.out.println(Stream.of(1,5,10).max(Comparator.naturalOrder()));
+
+
+        List<String> sentences = Arrays.asList(
+                "hello world",
+                "Java is good language",
+                "I am Vishwajeet Singh"
+        );
+
+        list5.parallelStream().forEachOrdered(System.out::println);
+
+        System.out.println(sentences.stream().flatMap(sent-> Arrays.stream(sent.split(" "))).map(String::toUpperCase).toList());
+
+        //using joining
+        String list7 =sentences.stream()
+                        .flatMap(sent-> Arrays.stream(sent.split(" ")))
+                        .map(String::toUpperCase)
+                .collect(Collectors.joining(","));
+        System.out.println(list7);
+
+        List<String> words = List.of("hello","world","java","is","good language");
+
+        //grouping elements & counting
+        //Map<Integer, List<String>> collect3 = words.stream().collect(Collectors.groupingBy(String::length));
+        //System.out.println(collect3);
+        Map<Integer, Long> collect3 = words.stream()
+                .collect(Collectors.groupingBy(String::length, Collectors.counting()));
+        System.out.println(collect3);
+
+        //count word occurence
+        String temp= "hello hello java java world back back back";
+        System.out.println(Arrays.stream(temp.split("\\s")).collect(Collectors.groupingBy(x->x,Collectors.counting())));
+
+        System.out.println(numberList.stream().collect(Collectors.partitioningBy(x -> x % 2 == 0)));
+
+        //summing values of a map
+
+        Map<String,Integer> items = Map.of(
+                "Apple",5,
+                "Banana",6,
+                "Guava",8
+        );
+
+        System.out.println(items.values().stream().reduce(Integer::sum));
+    }
+
+    private static long f(int n){
+        long result = 1;
+
+        for(int i=2;i<=n;i++){
+            result *= i;
+        }
+        return result;
     }
 
     public record Employee(String name) {}
