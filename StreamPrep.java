@@ -2,6 +2,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class StreamPrep {
@@ -36,7 +37,6 @@ public class StreamPrep {
         List<String> names=Arrays.asList("Ram","Shyam","Jam");
         names.forEach(System.out::println);
 
-        List<Employee> list = names.stream().map(Employee::new).toList();
 
         List<Integer> numberList = Arrays.asList(1,2,3,4,5,6,7,8,9);
 
@@ -193,6 +193,58 @@ public class StreamPrep {
         );
 
         System.out.println(items.values().stream().reduce(Integer::sum));
+
+        List<Integer> list8 = Arrays.asList(1,2,2,2,3,3,4,4,5,6,7,8,9,10);
+
+        System.out.println(list8.stream().distinct().filter(x-> Collections.frequency(list8, x)>1).toList());
+
+        System.out.println(list8.stream().collect(Collectors.summingInt(Integer::intValue)));
+
+        String cleanStr= "ababab";
+
+        boolean isPalindrome = IntStream.range(0, cleanStr.length() / 2)
+                .allMatch(x-> cleanStr.charAt(x) == cleanStr.charAt(cleanStr.length() - 1 - x));
+        System.out.println(isPalindrome);
+
+        List<String> list9 = Arrays.asList("abc","b","c","d","e","f");
+        System.out.println(list9.stream().collect(Collectors.joining(",")));
+
+        System.out.println(list9.stream().max(Comparator.comparing(String::length)).get());
+
+        System.out.println(list9.stream().map(String::toUpperCase).toList());
+
+        System.out.println(list8.stream().reduce(0,(z,b)-> z+b));
+
+//        list8.stream().distinct()
+//                .forEach(System.out::println);
+
+         List<Employee> employees = Arrays.asList(
+                new Employee(1, "Abraham", 29, "IT", "Mumbai", 20000, "Male"),
+                new Employee(2, "Mary", 27, "Sales", "Chennai", 25000, "Female"),
+                new Employee(3, "Joe", 28, "IT", "Chennai", 22000, "Male"),
+                new Employee(4, "John", 29, "Sales", "Gurgaon", 29000, "Male"),
+                new Employee(5, "Liza", 25, "Sales", "Bangalore", 32000, "Female"),
+                new Employee(6, "Peter", 27, "Admin", "Mumbai", 31500, "Male"),
+                new Employee(7, "Harry", 30, "Research", "Kochi", 21000, "Male")
+        );
+
+//        System.out.println(employees.stream().filter(e-> e.getName().startsWith("A")).toList());
+//
+//        System.out.println(employees.stream().collect(Collectors.groupingBy(Employee::getDepartNames)));
+//        System.out.println(employees.stream().count());
+//        System.out.println(employees.stream().max(Comparator.comparing(Employee::getAge)));
+//        System.out.println(employees.stream().map(e->e.getDepartNames()).distinct().toList());
+//        System.out.println(employees.stream().collect(Collectors.groupingBy(Employee::getDepartNames,Collectors.counting())));
+//        System.out.println(employees.stream().filter(e-> e.getAge()<30).toList());
+//        System.out.println(employees.stream().collect(Collectors.groupingBy(Employee::getGender,Collectors.averagingDouble(Employee::getAge))));
+//
+//        System.out.println(employees.stream().collect(Collectors.groupingBy(Employee::getDepartNames,Collectors.counting())).entrySet().stream().max(Map.Entry.comparingByValue()).get());
+//        System.out.println(employees.stream().filter(e->e.getAddress()=="Chennai").sorted(Comparator.comparing(Employee::getName)).toList());
+//        System.out.println(employees.stream().collect(Collectors.groupingBy(Employee::getDepartNames,Collectors.averagingDouble(Employee::getSalary))));
+//        System.out.println(employees.stream().collect(Collectors.groupingBy(Employee::getDepartNames,Collectors.maxBy(Comparator.comparing(Employee::getSalary)))));
+
+        System.out.println(employees.stream().sorted(Comparator.comparing(Employee::getSalary)).toList());
+        System.out.println(employees.stream().sorted(Comparator.comparing(Employee::getAge).reversed()).skip(1).findFirst().get());
     }
 
     private static long f(int n){
@@ -204,7 +256,9 @@ public class StreamPrep {
         return result;
     }
 
-    public record Employee(String name) {}
+
+
+
 }
 
 
